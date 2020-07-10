@@ -1,9 +1,11 @@
 package com.soft.shiro;
 
 import cn.hutool.json.JSONUtil;
+import com.soft.sys.PrivateConstants;
 import com.soft.util.JwtUtils;
-import com.soft.util.Result;
+import com.soft.sys.Result;
 import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.ExpiredCredentialsException;
@@ -24,6 +26,7 @@ import java.io.IOException;
  * 过滤器JwtFilter
  * @author suphowe
  */
+@Slf4j
 @Component
 public class JwtFilter extends AuthenticatingFilter {
 
@@ -108,6 +111,13 @@ public class JwtFilter extends AuthenticatingFilter {
         if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
             httpServletResponse.setStatus(org.springframework.http.HttpStatus.OK.value());
             return false;
+        }
+        log.info(httpServletRequest.getRequestURI());
+        //白名单过滤
+        for (String whiteUrl: PrivateConstants.WHITE_URLS) {
+            if (whiteUrl.equals(httpServletRequest.getRequestURI())){
+                return true;
+            }
         }
         return super.preHandle(request, response);
     }
