@@ -5,6 +5,24 @@ spring:
     url: jdbc:postgresql://192.168.200.112:5432/suphowe?useSSL=false
     username: root
     password: root
+    # 使用druid数据源
+    type: com.alibaba.druid.pool.DruidDataSource
+    dbcp2:
+      initial-size: 1
+      max-wait-millis: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      validation-query: select 'x'
+      test-on-borrow: false
+      test-on-return: false
+      test-while-idle: true
+      max-total: 20
 # ===============mybatis配置========================
-mybatis-plus:
-  mapper-locations: classpath*:/mapper/**Mapper.xml
+## 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml  #注意：一定要对应mapper映射xml文件的所在路径
+  type-aliases-package: com.soft.entity  # 注意：对应实体类的路径
+
+# ===============引入日志配置文件  log  =============================
+logging:
+  config: classpath:log/logback-boot.xml

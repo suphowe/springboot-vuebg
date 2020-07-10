@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+
+    <classPathEntry location="D:\maven\repository\org\postgresql\postgresql\42.2.5\postgresql-42.2.5.jar"/>
+
+    <context id="context" targetRuntime="MyBatis3Simple">
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+            <property name="suppressDate" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection userId="root" password="root" driverClass="org.postgresql.Driver" connectionURL="jdbc:postgresql://192.168.200.112:5432/suphowe"/>
+
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="false"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.soft.entity" targetProject="E:\test">
+            <property name="enableSubPackages" value="false"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="E:\test">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator targetPackage="com.soft.mapper" type="XMLMAPPER" targetProject="E:\test">
+            <property name="enableSubPackages" value="false"/>
+        </javaClientGenerator>
+
+        <!-- 指定数据库表 -->
+        <table tableName="m_user" enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"/>
+        <table tableName="m_blog" enableCountByExample="false" enableDeleteByExample="false"
+               enableSelectByExample="false" enableUpdateByExample="false"/>
+    </context>
+</generatorConfiguration>
