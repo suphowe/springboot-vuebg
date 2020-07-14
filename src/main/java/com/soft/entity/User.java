@@ -2,7 +2,7 @@ package com.soft.entity;
 
 import java.util.Date;
 
-public class MUser {
+public class User {
     private String id;
 
     private String username;

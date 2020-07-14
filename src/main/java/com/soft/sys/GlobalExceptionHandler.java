@@ -15,15 +15,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @author suphowe
  */
 @Slf4j
-@RestControllerAdvice
+@RestControllerAdvice               //全局控制器异常处理
 public class GlobalExceptionHandler {
 
     /**
      * 捕捉shiro的异常
+     * shiro抛出的异常，比如没有权限，用户登录异常
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(value = ShiroException.class)
-    public Result handler(ShiroException e) {
+    public Object handler(ShiroException e) {
         log.error("运行时异常：----------------{}", e);
         return Result.fail(401, e.getMessage(), null);
     }
@@ -32,8 +33,8 @@ public class GlobalExceptionHandler {
      * 校验错误异常处理
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public Result handler(MethodArgumentNotValidException e) {
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)        //@ExceptionHandler 针对特定异常处理
+    public Object handler(MethodArgumentNotValidException e) {
         log.error("实体校验异常：----------------{}", e);
         BindingResult bindingResult = e.getBindingResult();
         ObjectError objectError = bindingResult.getAllErrors().stream().findFirst().get();
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = IllegalArgumentException.class)
-    public Result handler(IllegalArgumentException e) {
+    public Object handler(IllegalArgumentException e) {
         log.error("Assert异常：----------------{}", e);
         return Result.fail(e.getMessage());
     }
@@ -56,7 +57,7 @@ public class GlobalExceptionHandler {
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
-    public Result handler(RuntimeException e) {
+    public Object handler(RuntimeException e) {
         log.error("运行时异常：----------------{}", e);
         return Result.fail(e.getMessage());
     }

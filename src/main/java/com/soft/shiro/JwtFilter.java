@@ -82,7 +82,7 @@ public class JwtFilter extends AuthenticatingFilter {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         Throwable throwable = e.getCause() == null ? e : e.getCause();
-        Result result = Result.fail(throwable.getMessage());
+        Object result = Result.fail(throwable.getMessage());
         String json = JSONUtil.toJsonStr(result);
         //处理登录失败的异常
         try {
@@ -94,7 +94,6 @@ public class JwtFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 对跨域提供支持
      * 拦截器的前置拦截
      * 因为我们是前后端分析项目，项目中除了需要跨域全局配置之外，我们再拦截器中也需要提供跨域支持。
      * 这样，拦截器才不会在进入Controller之前就被限制了
@@ -112,14 +111,34 @@ public class JwtFilter extends AuthenticatingFilter {
             httpServletResponse.setStatus(org.springframework.http.HttpStatus.OK.value());
             return false;
         }
-        log.info(httpServletRequest.getRequestURI());
         //白名单过滤
         for (String whiteUrl: PrivateConstants.WHITE_URLS) {
-            if (whiteUrl.equals(httpServletRequest.getRequestURI())){
+            if (httpServletRequest.getRequestURI().indexOf(whiteUrl) != -1){
                 return true;
             }
         }
-        return super.preHandle(request, response);
+//        return super.preHandle(request, response);
+        return verifyToken(request);
+    }
+
+    /**
+     * 校验token是否过期
+     */
+    private boolean verifyToken(ServletRequest servletRequest) throws Exception {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        String jwt = request.getHeader("Authorization");
+        //未获取到头部Token
+        if(StringUtils.isEmpty(jwt)) {
+            return false;
+        } else {
+            // 校验jwt,判断是否已过期
+            Claims claim = jwtUtils.getClaimByToken(jwt);
+            if(claim == null || jwtUtils.isTokenExpired(claim.getExpiration())) {
+                log.info("token已失效");
+                return false;
+            }
+            return true;
+        }
     }
 
 }

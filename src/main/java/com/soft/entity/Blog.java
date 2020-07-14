@@ -2,7 +2,7 @@ package com.soft.entity;
 
 import java.util.Date;
 
-public class MBlog {
+public class Blog {
     private String id;
 
     private String userId;

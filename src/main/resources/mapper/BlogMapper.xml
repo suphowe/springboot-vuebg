@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.soft.mapper.MBlogMapper">
-  <resultMap id="BaseResultMap" type="com.soft.entity.MBlog">
+<mapper namespace="com.soft.mapper.BlogMapper">
+  <resultMap id="BaseResultMap" type="com.soft.entity.Blog">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
     <result column="title" jdbcType="VARCHAR" property="title" />
@@ -14,15 +14,15 @@
     delete from m_blog
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.soft.entity.MBlog">
+  <insert id="insert" parameterType="com.soft.entity.Blog">
     insert into m_blog (id, user_id, title, 
       description, content, created, 
       status)
-    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+    values ((select max(cast(id as integer)) + 1 as id from m_blog), #{userId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR},
       #{description,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}, #{created,jdbcType=TIMESTAMP}, 
       #{status,jdbcType=INTEGER})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.soft.entity.MBlog">
+  <update id="updateByPrimaryKey" parameterType="com.soft.entity.Blog">
     update m_blog
     set user_id = #{userId,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
@@ -37,8 +37,12 @@
     from m_blog
     where id = #{id,jdbcType=VARCHAR}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap">
+  <select id="selectByPage" resultMap="BaseResultMap">
     select id, user_id, title, description, content, created, status
-    from m_blog
+    from m_blog limit #{length} OFFSET #{start}
+  </select>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from m_blog
   </select>
 </mapper>

@@ -1,16 +1,14 @@
 package com.soft.shiro;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.soft.entity.MUser;
-import com.soft.service.IMUserService;
+import com.soft.entity.User;
+import com.soft.service.UserService;
 import com.soft.util.JwtUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +24,7 @@ public class AccountRealm extends AuthorizingRealm {
     JwtUtils jwtUtils;
 
     @Autowired
-    IMUserService userService;
+    UserService userService;
 
     /**
      * 让realm支持jwt的凭证校验
@@ -53,7 +51,7 @@ public class AccountRealm extends AuthorizingRealm {
         JwtToken jwt = (JwtToken) token;
         log.info("jwt----------------->{}", jwt);
         String userId = jwtUtils.getClaimByToken((String) jwt.getPrincipal()).getSubject();
-        MUser user = userService.getById(userId);
+        User user = userService.getById(userId);
         if(user == null) {
             throw new UnknownAccountException("账户不存在！");
         }

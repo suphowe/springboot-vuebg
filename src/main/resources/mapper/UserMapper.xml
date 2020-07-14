@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.soft.mapper.MUserMapper">
-  <resultMap id="BaseResultMap" type="com.soft.entity.MUser">
+<mapper namespace="com.soft.mapper.UserMapper">
+  <resultMap id="BaseResultMap" type="com.soft.entity.User">
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
@@ -15,7 +15,7 @@
     delete from m_user
     where id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="com.soft.entity.MUser">
+  <insert id="insert" parameterType="com.soft.entity.User">
     insert into m_user (id, username, avatar, 
       email, password, status, 
       created, last_login)
@@ -23,7 +23,7 @@
       #{email,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{created,jdbcType=TIMESTAMP}, #{lastLogin,jdbcType=TIMESTAMP})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.soft.entity.MUser">
+  <update id="updateByPrimaryKey" parameterType="com.soft.entity.User">
     update m_user
     set username = #{username,jdbcType=VARCHAR},
       avatar = #{avatar,jdbcType=VARCHAR},
@@ -39,6 +39,13 @@
     from m_user
     where id = #{id,jdbcType=VARCHAR}
   </select>
+
+  <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select id, username, avatar, email, password, status, created, last_login
+    from m_user
+    where username = #{username,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectAll" resultMap="BaseResultMap">
     select id, username, avatar, email, password, status, created, last_login
     from m_user

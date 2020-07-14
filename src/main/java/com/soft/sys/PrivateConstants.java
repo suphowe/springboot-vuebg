@@ -8,6 +8,6 @@ import com.soft.util.SysUtil;
  */
 public class PrivateConstants {
 
-    public static final String[]  WHITE_URLS = SysUtil.getProperties("config/constants.properties", "WHITE_URLS").split(",");
+    public static final String[]  WHITE_URLS = SysUtil.getProperties("config/constants", "WHITE_URLS").split(",");
 
 }
